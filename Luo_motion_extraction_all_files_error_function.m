@@ -50,21 +50,6 @@ for k=1:size(files,1)   %will go through all the files of the folder
     discretization_y=linspace(min_y,max_y,n);
     discretization_z=linspace(min_z,max_z,n);
     discretization_global=linspace(minimum,maximum,n);
-    for i=1:size(displacement_x,1)    %will generate an histogram for each frame for the x,y and z coordinates
-        histogram_x(i,:)=histcounts(displacement_x(i,:),discretization_x);
-        histogram_y(i,:)=histcounts(displacement_y(i,:),discretization_y);
-        histogram_z(i,:)=histcounts(displacement_z(i,:),discretization_z);
-        histogram_max_min(i,:)=histcounts(displacement(i,:),discretization_global);
-    end
-    
-    %computing the probabilities, simply by dividing the histogram by the
-    %number of marker
-    for i=1:size(histogram_x)
-        prob_x(i,:)=histogram_x(i,:)/(size(markers_values,2)/3);
-        prob_y(i,:)=histogram_y(i,:)/(size(markers_values,2)/3);
-        prob_z(i,:)=histogram_z(i,:)/(size(markers_values,2)/3);
-        prob_global(i,:)=histogram_max_min(i,:)/(size(markers_values,2)/3);
-    end
     
     Cx_luo=compute_C_luo_mod_disc(n,displacement_x,discretization_x,labels,sweep);  %returns the C matrix
     Cy_luo=compute_C_luo_mod_disc(n,displacement_y,discretization_y,labels,sweep);
@@ -72,11 +57,11 @@ for k=1:size(files,1)   %will go through all the files of the folder
     C_max_min_luo=compute_C_luo_mod_disc(n,displacement,discretization_global,labels,sweep);
     
     %compute the joint entropy for each dimension     
-    Ix_luo_mod=mutual_info_luo(size(displacement,1),Cx_luo,prob_x);
-    Iy_luo_mod=mutual_info_luo(size(displacement,1),Cy_luo,prob_y);
-    Iz_luo_mod=mutual_info_luo(size(displacement,1),Cz_luo,prob_z);
+    Ix_luo_mod=mutual_info_luo(size(displacement,1),Cx_luo);
+    Iy_luo_mod=mutual_info_luo(size(displacement,1),Cy_luo);
+    Iz_luo_mod=mutual_info_luo(size(displacement,1),Cz_luo);
     I_luo_mod=Ix_luo_mod+Iy_luo_mod+Iz_luo_mod;
-    I_max_min_luo_mod=mutual_info_luo(size(displacement,1),C_max_min_luo,prob_global);
+    I_max_min_luo_mod=mutual_info_luo(size(displacement,1),C_max_min_luo);
     
     %the get_error function gives back the error for the strike and off
     %events, for each dimension. get_error3_with_plot returns the plot for
