@@ -1,10 +1,10 @@
-set=5; %Set choice: 1=all marker, 2=minimal, 3=lower body, 4=legs, 5=shanks, 6=feet
+set=6; %Set choice: 1=all marker, 2=minimal, 3=lower body, 4=legs, 5=shanks, 6=feet
 side=1; %Side choice: 1 or nothing=both, 2=right side, 3=Left side. Medial markers(STRN, CLAV...) are keeped.
-disc=115;   %nombre de niveaux de discrétisations
-sweep=18;   %taille des sous-ensemble comparés
+disc=119;   %nombre de niveaux de discrétisations
+sweep=14;   %taille des sous-ensemble comparés
 PeakHeight=1;   %réglage de la hauteur minimale
-PeakDistance=18;    %reglage de la distance minimale entre deux pics
-PeakProminence=1.014487;    %reglage de la proéminence minimale
+PeakDistance=26;    %reglage de la distance minimale entre deux pics
+PeakProminence=13.43;    %reglage de la proéminence minimale
 [error_Ix_off,error_Ix_strike,general,files]=Luo_motion_extraction_all_files_error_function(set,...
     side,disc,sweep,PeakHeight,PeakDistance,PeakProminence); %function that gives back the errors values
 

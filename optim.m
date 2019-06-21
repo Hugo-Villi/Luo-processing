@@ -109,7 +109,7 @@ for k=1:size(files,1)
     %min_z = min(displacement_z,[],'all');
     
     %creating the histograms
-    n = round(X(1)) ;                                %number of discretizations levels, this setting may have importance on the results
+    n = X(1) ;                                %number of discretizations levels, this setting may have importance on the results
     discretization_x=linspace(min_x,max_x,n);   %the function linspace creates a vector of values envenly distributed along a range
     %discretization_y=linspace(min_y,max_y,n);
     %discretization_z=linspace(min_z,max_z,n);

@@ -5,10 +5,11 @@ function [error_Ix_off,error_Ix_strike,general,files]...
 myFolder = 'D:\stage\Luo processing\all_files'; %define the folder where the files to compute are
 files=get_file_names_c3d(myFolder); %Get the names of the files inside the folder
 for k=1:size(files,1)   %will go through all the files of the folder
+    k
     clearvars -except disc sweep PeakHeight PeakDistance PeakProminence files k...
         error_I_strike error_Ix_strike error_Iy_strike error_Iz_strike...
         error_I_off error_Ix_off error_Iy_off error_Iz_off set side_choice  %clear all variables that aren't needed to execute a new loop or that need to be saved
-    file = files(k).name;   %select the file that will be computed    
+    file = files(k).name   %select the file that will be computed    
     acq = btkReadAcquisition(file);             %read the file
     all_labels = fieldnames(btkGetMarkers(acq));    %get the labels of the markers
     all_markers_values = btkGetMarkersValues(acq);  %give an array filled with the coordinates of the marker (x,y,z of first marker, x,y,z of second, and so on)
@@ -17,7 +18,7 @@ for k=1:size(files,1)   %will go through all the files of the folder
     events_frame=events/(1/frequency);  %the timing of the events are given in seconds and are translated in frame
     file_for_save=erase(file,'.c3d');   %erase the .c3d in the name of the file to save the plot figures 
     [markers_values,labels,marker_set_choice,side_ch]=marker_set(set,all_labels,all_markers_values,side_choice); %gives back the coordinates values of the selected markers
-    
+    markers_values(isnan(markers_values))=0;
     %%calculation of the displacement vector
     displacement=zeros(size(markers_values,1)-1,size(markers_values,2));%preallocation
     for i=1:(size(markers_values,1)-1)                                  %-1 otherwise it will crash trying to reach the last frame + 1
