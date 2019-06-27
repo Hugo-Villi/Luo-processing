@@ -1,5 +1,5 @@
 %%acquisition of the needed data from the motion capture.
-function [Reve_r,Leve_r,Reve_l,Leve_l]...
+function [Reve,Leve]...
     = Luo_motion_extraction_sofa_R_L(acq,set,side_choice,disc,sweep,...
     PeakHeight,PeakDistance,PeakProeminence,strike_off_choice)
 Reve=[];
@@ -19,9 +19,9 @@ end
 if side_choice==1
     Leve_r=[];
     Reve_l=[];
-    [markers_values,labels]=marker_set(set,all_labels,all_markers_values,1); %gives back the coordinates values of the selected markers
+    [markers_values,labels]=marker_set_foot(set,all_labels,all_markers_values,1); %gives back the coordinates values of the selected markers
+    markers_values(markers_values==0)=NaN;    
     markers_values=PredictMissingMarkers(markers_values);
-    markers_values(isnan(markers_values))=0;
     %%calculation of the displacement vector
     displacement=zeros(size(markers_values,1)-1,size(markers_values,2));%preallocation
     for i=1:(size(markers_values,1)-1)                                  %-1 otherwise it will crash trying to reach the last frame + 1
@@ -31,8 +31,8 @@ if side_choice==1
     %detection and discretization)
     for i=3:3:size(markers_values,2)
         displacement_x(:,i/3)=displacement(:,i-2);
-        displacement_y(:,i/3)=displacement(:,i-1);
-        displacement_z(:,i/3)=displacement(:,i);
+        %displacement_y(:,i/3)=displacement(:,i-1);
+        %displacement_z(:,i/3)=displacement(:,i);
     end
     %%displacement histogram
     maximum=max(displacement,[],'all');     %gives the max values for all the column hence for all the x,y,z coordinates respectively
@@ -42,11 +42,11 @@ if side_choice==1
     max_x = max(displacement_x,[],'all');
     min_x = min(displacement_x,[],'all');
     
-    max_y = max(displacement_y,[],'all');
-    min_y = min(displacement_y,[],'all');
+    %max_y = max(displacement_y,[],'all');
+    %min_y = min(displacement_y,[],'all');
     
-    max_z = max(displacement_z,[],'all');
-    min_z = min(displacement_z,[],'all');
+    %max_z = max(displacement_z,[],'all');
+    %min_z = min(displacement_z,[],'all');
     
     %creating the histograms
     n = disc ;                                %number of discretizations levels, this setting may have importance on the results
@@ -70,15 +70,15 @@ if side_choice==1
     %the get_error function gives back the error for the strike and off
     %events, for each dimension. get_error3_with_plot returns the plot for
     %each file
-    [Reve_r,Leve_l,peaks_num] = get_event(Ix_luo_mod,sweep,PeakHeight,PeakDistance,PeakProeminence,strike_off_choice,X_RTOE,X_LTOE);
+    [Reve,Leve,peaks_num] = get_event(Ix_luo_mod,sweep,PeakHeight,PeakDistance,PeakProeminence,strike_off_choice,X_RTOE,X_LTOE);
 else
     [markers_values_r,labels_r]=marker_set_foot(set,all_labels,all_markers_values,2); %gives back the coordinates values of the selected markers
-    
+    markers_values_r(markers_values_r==0)=NaN;
     markers_values_r=PredictMissingMarkers(markers_values_r);
-    markers_values_r(isnan(markers_values_r))=0;
+    
     [markers_values_l,labels_l]=marker_set_foot(set,all_labels,all_markers_values,3); %gives back the coordinates values of the selected markers
+    markers_values_l(markers_values_l==0)=NaN;
     markers_values_l=PredictMissingMarkers(markers_values_l);
-    markers_values_l(isnan(markers_values_l))=0;
     %%calculation of the displacement vector
     displacement_r=zeros(size(markers_values_r,1)-1,size(markers_values_r,2));%preallocation
     displacement_l=zeros(size(markers_values_l,1)-1,size(markers_values_l,2));
@@ -156,8 +156,8 @@ else
     %the get_error function gives back the error for the strike and off
     %events, for each dimension. get_error3_with_plot returns the plot for
     %each file
-    [Reve_r,Leve_r,peaks_num_r] = get_event(Ix_luo_mod_r,sweep,PeakHeight,PeakDistance,PeakProeminence,strike_off_choice,X_RTOE,X_LTOE);
-    [Reve_l,Leve_l,peaks_num_l] = get_event(Ix_luo_mod_l,sweep,PeakHeight,PeakDistance,PeakProeminence,strike_off_choice,X_RTOE,X_LTOE);
+    [Reve,Leve_r,peaks_num_r] = get_event(Ix_luo_mod_r,sweep,PeakHeight,PeakDistance,PeakProeminence,strike_off_choice,X_RTOE,X_LTOE);
+    [Reve_l,Leve,peaks_num_l] = get_event(Ix_luo_mod_l,sweep,PeakHeight,PeakDistance,PeakProeminence,strike_off_choice,X_RTOE,X_LTOE);
 end
 
 

@@ -1,17 +1,16 @@
 clearvars
-opts = optimoptions('ga','PlotFcn',@gaplotbestf);
-% Optimisation
+opts = optimoptions('ga','PlotFcn',@gaplotbestf,'PopulationSize',25,'Generations',7);% Optimisation
  % Anonymous function (to pass extra parameters)
 Xini=[16;10;30;10;1;1];
 M =[0;0];
-IntCon = [1,2,3,5,6];
+IntCon = [1,2,3];
 
-lb = [4;1;10;1;1;1];
-ub = [400;40;100;50;7;3];
+lb = [4;1;10;1];
+ub = [400;40;100;50];
 global ite Save_score Save_x
 ite=0;
 C = @(X)fun(X,M);
-[x,~,exitflag,output] = ga(C,6,[],[],[],[],lb,ub,[],IntCon,opts);
+[x,~,exitflag,output] = ga(C,4,[],[],[],[],lb,ub,[],IntCon,opts);
 
 function score_final_FS_total = fun(X,M)
 addpath(genpath('.\btk'))
@@ -32,14 +31,15 @@ sweep_str=X(2);   %taille des sous-ensemble comparés
 PeakHeight_str=1;   %réglage de la hauteur minimale
 PeakDistance_str=X(3);    %reglage de la distance minimale entre deux pics
 PeakProminence_str=X(4);
-set=X(5); %Set choice: 1=all marker, 2=minimal, 3=lower body, 4=legs, 5=shanks, 6=feet
-side=X(6); %Side choice: 1 or nothing=both, 2=right side, 3=Left side. Medial markers(STRN, CLAV...) are keeped
+
+set=7; %Set choice: 1=all marker, 2=minimal, 3=lower body, 4=legs, 5=shanks, 6=feet
+side=1; %Side choice: 1 or nothing=both, 2=right side, 3=Left side. Medial markers(STRN, CLAV...) are keeped
 %{
-disc_off=513;   %nombre de niveaux de discrétisations
-sweep_off=18;   %taille des sous-ensemble comparés
+disc_off=X(1);   %nombre de niveaux de discrétisations
+sweep_off=X(2);   %taille des sous-ensemble comparés
 PeakHeight_off=1;   %réglage de la hauteur minimale
-PeakDistance_off=18;    %reglage de la distance minimale entre deux pics
-PeakProminence_off=1.014487;
+PeakDistance_off=X(3);    %reglage de la distance minimale entre deux pics
+PeakProminence_off=X(4);
 %}
 
 for ind_folder = 1:size(folder,2)
@@ -53,10 +53,10 @@ for ind_folder = 1:size(folder,2)
         c3d_filename = strcat(folder{ind_folder},'\',c3d_filename);
         acq = btkReadAcquisition(c3d_filename);
         % Event detection function
-        [RFS,LFS]= Luo_motion_extraction_sofa(acq,set,side,disc_str,sweep_str,...
+        [RFS,LFS]= Luo_motion_extraction_sofa_R_L(acq,set,side,disc_str,sweep_str,...
             PeakHeight_str,PeakDistance_str,PeakProminence_str,1);
-        %[RFO,LFO]= Luo_motion_extraction_sofa(acq,set,side,disc_off,sweep_off,...
-            %PeakHeight_off,PeakDistance_off,PeakProminence_off);
+        %[RFO,LFO]= Luo_motion_extraction_sofa_R_L(acq,set,side,disc_off,sweep_off,...
+            %PeakHeight_off,PeakDistance_off,PeakProminence_off,2);
         
         
         % Frame difference calculation from the reference

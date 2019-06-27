@@ -10,10 +10,10 @@ function [Reve,Leve]...
     frequency=btkGetPointFrequency(acq);    %get the frequency of the point acquisition
     
    
-    X_RTOE=all_markers_values(:,(find(all_labels=="L_HAL")-1)*3+1);
-    X_LTOE=all_markers_values(:,(find(all_labels=="L_HAL")-1)*3+1);
-    [markers_values,labels]=marker_set_foot(set,all_labels,all_markers_values,side_choice); %gives back the coordinates values of the selected markers
-    markers_values(isnan(markers_values))=0;
+    X_RTOE=all_markers_values(:,(find(all_labels=="RTOE")-1)*3+1);
+    X_LTOE=all_markers_values(:,(find(all_labels=="LTOE")-1)*3+1);
+    [markers_values,labels]=marker_set(set,all_labels,all_markers_values,side_choice); %gives back the coordinates values of the selected markers
+    
     %%calculation of the displacement vector
     displacement=zeros(size(markers_values,1)-1,size(markers_values,2));%preallocation
     for i=1:(size(markers_values,1)-1)                                  %-1 otherwise it will crash trying to reach the last frame + 1
